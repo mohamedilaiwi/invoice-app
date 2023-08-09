@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan&family=Roboto+Condensed:wght@300&display=swap');
+:root {
+    --invoice-text-color: rgb(136, 142, 176);
+    --content-bg: rgb(248, 248, 251);
+    --filter-txt: rgb(12, 14, 22);
+    --button-bg: rgb(124, 93, 250);
+    --date-color: rgb(136, 142, 176);
+    --status-color: rgb(51, 214, 159);
+    --pending-bg: rgba(255, 143, 0, 0.1);
+    --pending-color: rgb(255, 143, 0);
+
+    --drafting-bg: rgba(55, 59, 83, 0.1);
+}
+
+.App {
+    background: var(--content-bg);
+}
+
+.main-content-wrapper {
+    padding: 2rem;
+    height: 100%;
+    background: var(--content-bg);
+}
+
+.Header-content-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 3rem;
+}
+
+.Header-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+}
+
+.header-text {
+    font-family: 'League Spartan', sans-serif;
+    font-weight: bold;
+    line-height: 1.125;
+    letter-spacing: -1px;
+    font-size: 1.75rem;
+}
+
+.header-subheading {
+    color: var(--invoice-text-color);
+    font-size: 1.1rem;
+    font-family: 'League Spartan', sans-serif;
+    line-height: 1.125;
+    letter-spacing: -0.25px;
+}
+
+.dropdown-header {
+    background: none;
+    border: none;
+    outline: none;
+    width: max-content;
+    cursor: pointer;
+}
+
+.Filter-text {
+    margin-right: 0.75rem;
+    color: var(--filter-txt);
+    font-weight: bold;
+    font-size: 0.9rem;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+}
+
+.Filter-text span {
+    display: none;
+}
+
+.Buttons-New-Wrapper {
+    margin-left: 1rem;
+    min-width: 6rem;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    background: var(--button-bg);
+    border-radius: 10rem;
+    cursor: pointer;
+}
+
+.Buttons-New-Wrapper a {
+    text-decoration: none;
+    color: white;
+    font-family: 'League Spartan', sans-serif;
+    font-size: 1rem;
+    font-weight: 550;
+    line-height: 1.25;
+}
+
+.Buttons-New-Wrapper .Buttons-Icon-Wrapper {
+    display: inline-flex;
+    margin-right: 0.5rem;
+    padding: 0.625rem;
+    background: white;
+    border-radius: 50%;
+}
+
+
+
+.btn-invoice-addition {
+    display: none;
+}
+
+
+.Invoice-Items-Wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.InvoiceItem {
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: white;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.InvoiceItem .InvoiceItem-ID{
+    grid-area: 1 / 1 / 2 / 2;
+    margin-bottom: 1.5rem;
+}
+
+.InvoiceItem .InvoiceItem-ClientName {
+    grid-area: 1 / 2 / 3 / 3;
+}
+
+.InvoiceItem .InvoiceItem-Status-Wrapper {
+    grid-area: 2 / 2 / 4 / 3;
+    margin-left: auto;
+}
+
+.InvoiceItem-ID {
+    font-size: 15px;
+    color: black;
+    font-weight: bold;
+    letter-spacing: -0.25px;
+    line-height: 15px;
+}
+
+.InvoiceItem-ID span {
+    color: var(--invoice-text-color);
+}
+
+.InvoiceItem .InvoiceItem-ClientName {
+    text-align: end;
+    font-family: 'League Spartan', sans-serif;
+    font-weight: medium;
+    font-size: 16px;
+    line-height: 15px;
+    letter-spacing: -0.1px;
+    color: #858BB2;
+}
+
+.InvoiceItem .InvoiceItem-PaymentDue {
+    font-size: 15px;
+    color: var(--date-color);
+    font-family: 'League Spartan', sans-serif;
+    font-weight: medium;
+    line-height: 1;
+    letter-spacing: -0.1px;
+    margin-bottom: 10px;
+}
+
+.InvoiceItem .InvoiceItem-Total {
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'League Spartan', sans-serif;
+    line-height: 1;
+    letter-spacing: -0.25px;
+}
+
+.InvoiceItem-Status-Wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 6.5rem;
+    border-radius: 6px;
+    background: rgba(51, 214, 159, 0.1);
+    gap: 5px;
+    height: 2.5rem;
+}
+
+.InvoiceItem-Status-Wrapper .status-Circle {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--status-color);
+}
+
+.InvoiceItem-Status-Wrapper .status-text {
+    font-family: 'League Spartan', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: -0.25px;
+    color: var(--status-color);
+    text-transform: capitalize;
+}
+
+#status-wrapper-pending {
+    background: var(--pending-bg);
+    color: var(--pending-color);
+}
+
+#status-circle-pending {
+    background: var(--pending-color);
+}
+
+#status-text-pending {
+    color: var(--pending-color);
+}
+
+#status-cricle-draft {
+    background: black;
+}
+
+.InvoiceItem #status-wrapper-draft {
+    background: var(--drafting-bg);
+}
+
+#status-circle-draft {
+    background: black;
+}
+
+#status-text-draft {
+    color: black;
+}
+
+
+.missing-information-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+    text-align: center;
+}
+
+.missing-information-wrapper .missing-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.missing-information-wrapper img {
+    width: 12rem;
+}
+
+.missing-text-wrapper h2 {
+    font-weight: bold;
+    font-family: 'League Spartan', sans-serif;
+    font-size: 24px;
+    line-height: auto;
+    letter-spacing: -0.75px;
+}
+
+.missing-information-wrapper p {
+    font-family: 'League Spartan', sans-serif;
+    font-weight: medium;
+    letter-spacing: -0.1px;
+    line-height: 15px;
+    max-width: 70%;
+    color: var(--invoice-text-color);
+}
+

@@ -1,0 +1,84 @@
+:root {
+    --header-bg: rgb(55, 59, 83);
+    --logo-bg: rgb(124, 93, 250);
+    --logo-after-bg: rgb(146, 119, 255);
+    --line-seperator-bg: rgb(73, 78, 110);
+}
+
+*, ::before, ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+.side-nav {
+    position: static;
+    top: 0;
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    background: var(--header-bg);
+    transition: background 0.3s ease 0s;
+}
+
+.side-nav_logo-wrapper {
+    width: 5rem;
+    height: 5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0px 20px 20px 0px;
+    background: var(--logo-bg);
+
+    margin-right: auto;
+}
+
+.side-nav_logo-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 50%;
+    background: var(--logo-after-bg);
+    border-radius: 20px 0px;
+}
+
+.side-nav__logo {
+    z-index: 2;
+}
+
+.side-nav__theme-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+
+    margin: 0px 1rem;
+}
+
+
+
+.side-nav__theme-seperator {
+    width: 1px;
+    height: 100%;
+    align-items: stretch;
+    background: var(--line-seperator-bg);
+}
+
+.side-nav__avatar-wrapper {
+    margin: 0px 1.75rem;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.side-nav__avatar-wrapper .side-nav__avatar {
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    border-radius: 50%;
+}
