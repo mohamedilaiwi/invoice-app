@@ -19,9 +19,7 @@
     border-radius: 4px;
     padding: 0.8rem;
     max-width: 100%;
-}
 
-.Editting-Form-Wrapper input::placeholder, select, .New-Form-Wrapper input::placeholder {
     font-weight: bold;
     color: black;
     font-family: 'League Spartan', sans-serif;

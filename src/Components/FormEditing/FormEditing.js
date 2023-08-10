@@ -1,19 +1,19 @@
 import './FormEditing.css'
 import backArrow from '../../images/assets/icon-arrow-down.svg';
 import deleteImg from '../../images/assets/icon-delete.svg';
-import {convertToTwoDecimalPoints} from '../InvoiceDetails/InvoiceDetails'
+import { EditInvoiceFooter } from '../InvoiceDetails/InvoiceDetails';
 
 const EditFormContainer = ({form}) => {
     return (
       <div className='Editting-Form-Wrapper'>
         <EditForm form={form}/>
+        <EditInvoiceFooter />
       </div>
     );
 };
 
 
 export const EditForm = ({form}) => {
-    
     return (
         <div className='Editting-Form-Wrapper'>
             <div
@@ -24,15 +24,15 @@ export const EditForm = ({form}) => {
             </div>
             <div className='Editing-Form'>
                 <h2>Edit <span>#</span>{form.id}</h2>
-                <BillFrom form={form} />
-                <BillTo form={form} />
+                <BillFrom editedForm={form} />
+                <BillTo editedForm={form} />
                 <ItemList form={form} />
             </div>
         </div>
     );
 };
 
-export const BillFrom = ({form, editedForm, setEditedForm, handleInputChange}) => {
+export const BillFrom = ({editedForm, handleInputChange}) => {
     return (
         <div className='Bill-From-Wrapper'>
             <h4 className='billing-header' id='bill-from'>Bill From</h4>
@@ -58,7 +58,7 @@ export const BillFrom = ({form, editedForm, setEditedForm, handleInputChange}) =
                 <div className='Postcode-Container form-container'>
                     <label htmlFor='postCode'>Post Code</label>
                     <input 
-                        type='number' 
+                        type='text' 
                         name='postCode' 
                         value={editedForm.senderAddress.postCode} 
                         onChange={e => handleInputChange('senderAddress-postCode', e.target.value)}
@@ -143,7 +143,10 @@ export const BillTo = ({form, editedForm, setEditedForm, handleInputChange}) => 
                 <label htmlFor='invoice-date' id='invoice-date-label'>Invoice Date</label>
                 <input 
                     type='text' 
-                    name='invoice-date'/>
+                    name='invoice-date'
+                    value={editedForm.paymentDue}
+                    onChange={e => handleInputChange('paymentDue', e.target.value)}
+                />
             </div>
             <div className='payment-terms-container form-container'>
                 <label htmlFor='payment-terms' id='payment-terms-label'>Payment Terms</label>
@@ -172,7 +175,6 @@ export const BillTo = ({form, editedForm, setEditedForm, handleInputChange}) => 
 };
 
 const ItemList = ({form}) => {
-
     return (
         <div className='ItemList-Wrapper'>
             <h3 id='item-list'>Item List</h3>
@@ -180,7 +182,11 @@ const ItemList = ({form}) => {
             <div className='Items-ItemList'>
                 {form.items.map((item, index) => {
                     return (
-                        <NewItem item={item} />
+                        <NewItem 
+                            index={index}
+                            handleFormInputChange={null}
+                            itemInputs={item} 
+                        />
                     )
                 })}
             </div>
@@ -188,7 +194,7 @@ const ItemList = ({form}) => {
     );
 };
 
-export const NewItem = ({item}) => {
+export const NewItem = ({index, handleFormInputChange, itemInputs}) => {
     return (
         <div className='Item-Wrapper'>
             <div className='Input-Wrapper'>
@@ -196,7 +202,8 @@ export const NewItem = ({item}) => {
                 <input 
                     type='text' 
                     name='item-name' 
-                    value={item.name} 
+                    value={itemInputs.name}
+                    onChange={e => handleFormInputChange(index, 'name', e.target.value)} 
                 />
             </div>
             <div className='Qty-Container item-container'>
@@ -204,7 +211,8 @@ export const NewItem = ({item}) => {
                 <input 
                     type='number' 
                     name='qty' 
-                    value={item.quantity}
+                    value={itemInputs.quantity}
+                    onChange={e => handleFormInputChange(index, 'quantity', e.target.value)}
                 />
             </div>
             <div className='Price-Container item-container'>
@@ -212,12 +220,13 @@ export const NewItem = ({item}) => {
                 <input 
                     type='number' 
                     name='price' 
-                    value={convertToTwoDecimalPoints(item.price)} 
+                    value={itemInputs.price}
+                    onChange={e => handleFormInputChange(index, 'price', e.target.value)} 
                 />
             </div>
             <div className='Total-Container item-container'>
                 <label htmlFor='total'>Total</label>
-                <p id='total-price'>{convertToTwoDecimalPoints(item.total)}</p>
+                <p id='total-price'>{itemInputs.total}</p>
             </div>
             <button className='Button-Delete'><img src={deleteImg} alt=''/></button>
         </div>

@@ -6,12 +6,16 @@ import missingData from '../../images/assets/illustration-empty.svg';
 import { formatDate } from '../InvoiceDetails/InvoiceDetails';
 import { Link } from 'react-router-dom';
 
-const MainContent = () => {
+const MainContent = ({data}) => {
     return (
-        <main className='main-content-wrapper'>
-            <Header amountInvoices={jsonData.length} />
-            <InvoicesList data={jsonData} />
-        </main>
+        <>
+            {data ? 
+                <main className='main-content-wrapper'>
+                    <Header amountInvoices={data.length} />
+                    <InvoicesList data={data} />
+                </main>
+                : <div>Loading...</div>}
+        </>
     )
 }
 

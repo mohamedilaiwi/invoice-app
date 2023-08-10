@@ -7,17 +7,18 @@ import dataJSON from '../../TEMP_DATA/data.json';
 import backArrow from '../../images/assets/icon-arrow-left.svg';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getID } from '../../utilities/utils';
 
 
-
-const InvoiceDetails = ({formData, setFormData}) => {
+const InvoiceDetails = ({formData, selectedInvoice, setSelectedInvoice}) => {
     const location = useLocation();
     const invoiceId = location.pathname.split('/invoice/')[1];
-
-    setFormData(_getDataFromID(invoiceId));
-
     const navigate = useNavigate();
     const [isReturnClicked, setIsReturnClicked] = useState(false);
+
+    setSelectedInvoice(getID(formData, invoiceId));
+
+
 
     const handleReturnClick = () => {
         setIsReturnClicked(true);
@@ -32,11 +33,11 @@ const InvoiceDetails = ({formData, setFormData}) => {
     return (
         <>
             <div className={`InvoiceDetail-Wrapper ${isReturnClicked ? 'return-page-shifted' : ''}`}>
-                {formData ? 
+                {selectedInvoice ? 
                         <>
                             <div className='DisplayContents-Invoice'>
-                                <DisplaySpecificInvoice item={formData} handleReturnClick={handleReturnClick} />
-                                <DisplayFullContents item={formData} />
+                                <DisplaySpecificInvoice item={selectedInvoice} handleReturnClick={handleReturnClick} />
+                                <DisplayFullContents item={selectedInvoice} />
                             </div>
                         </>
                     :
@@ -44,25 +45,18 @@ const InvoiceDetails = ({formData, setFormData}) => {
                 }
 
             </div>
-            <EditInvoiceFooter invoiceId={formData.id} />
+            {selectedInvoice ? <SelectInvoiceFooter invoiceId={selectedInvoice.id} /> : <span>Loading...</span>}
         </>
     )
 };
 
 
-function _getDataFromID(id) {
-    const foundItem = dataJSON.find((item) => item.id === id);
-    return foundItem;
-}
-
-
 const DisplaySpecificInvoice = ({item, handleReturnClick, handleDisplayFooter}) => {
-
     return (
         <>
             <div
                 className={`return-page-wrapper`}
-                onClick={() => {handleReturnClick(); handleDisplayFooter();}}
+                onClick={handleReturnClick}
             >
                 <img src={backArrow} alt=''/>
                 Go back
@@ -124,7 +118,7 @@ const DisplayFullContents = ({item}) => {
                 </div>
                 <div className='Items-GrandTotal'>
                     <p>Grand Total</p>
-                    <span>$ {convertToTwoDecimalPoints(item.total)}</span>
+                    <span>$ {item.total}</span>
                 </div>
             </div>
         </section>
@@ -140,10 +134,10 @@ const DisplayItems = ({item}) => {
                     <div className='DisplayItem' key={index}>
                         <p id='display-item-name'>{data.name}</p>
                         <span className='generic-font' id='display-item-totalPrice'>
-                            $ {convertToTwoDecimalPoints(data.total)}
+                            $ {data.total}
                         </span>
                         <span className='generic-font' id='display-item-prices'>
-                            {data.quantity} x $ {convertToTwoDecimalPoints(data.price)}
+                            {data.quantity} x $ {data.price}
                         </span>
                     </div>
                 )
@@ -152,17 +146,9 @@ const DisplayItems = ({item}) => {
     )
 };
 
-// export const InvoiceFooter = () => {
-//     const location = useLocation();
-//     const uri = location.pathname.split('/invoice/')[1];
-//     return (
-//         <>
-//             {uri === 'new' ? "Testing" : />}
-//         </>
-//     )
-// };
 
-const EditInvoiceFooter = ({invoiceId}) => {
+
+const SelectInvoiceFooter = ({invoiceId}) => {
     return (
         <div className='Invoice-Options-Wrapper'>
             <Link to={`/invoice/edit/${invoiceId}`}>
@@ -176,19 +162,28 @@ const EditInvoiceFooter = ({invoiceId}) => {
     )    
 };
 
-export const NewInvoiceFooter = ({handleSaveSend}) => {
+export const EditInvoiceFooter = () => {
     return (
-        <div className='Invoice-Options-Wrapper'>
+        <div className='Invoice-Options-Wrapper edit-footer-wrapper'>
+            <button id='cancel'> Cancel </button>
+            <button id='save-changes'> Save Changes </button>
+        </div>
+    )
+}
+
+export const NewInvoiceFooter = ({handleSubmit}) => {
+    return (
+        <form className='Invoice-Options-Wrapper' onClick={handleSubmit}>
             <button id='discard'>
                 Discard
             </button>
             <button id='save-draft'>
                 Save as Draft
             </button>
-            <button id='save-send' onClick={handleSaveSend}>
+            <button type='submit' id='save-send'>
                 Save & Send
             </button>
-        </div>
+        </form>
     )
 }
 

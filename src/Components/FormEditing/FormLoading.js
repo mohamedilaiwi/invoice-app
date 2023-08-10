@@ -40,4 +40,3 @@ const _setJSONData = (typeAddress, value) => {
     localStorage.setItem(typeAddress, modifiedJsonData);
 }
 
-
