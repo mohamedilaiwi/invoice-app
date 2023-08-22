@@ -3,30 +3,50 @@ import '../MainContent/MainContent.css';
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-import dataJSON from '../../TEMP_DATA/data.json';
 import backArrow from '../../images/assets/icon-arrow-left.svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getID } from '../../utilities/utils';
+import { StoreEditInvoice } from '../InvoiceDetails/NewInvoices';
 
 
-const InvoiceDetails = ({formData, selectedInvoice, setSelectedInvoice}) => {
+const InvoiceDetails = ({formData, selectedInvoice, setSelectedInvoice, handleDeleteButton}) => {
     const location = useLocation();
     const invoiceId = location.pathname.split('/invoice/')[1];
     const navigate = useNavigate();
     const [isReturnClicked, setIsReturnClicked] = useState(false);
-
+    const [shouldDisplayPaymentDue, setShouldDisplayPaymentDue] = useState(
+        window.innerWidth >= 768
+      );
+    
+      useEffect(() => {
+        const handleResize = () => {
+          setShouldDisplayPaymentDue(window.innerWidth >= 768);
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
     setSelectedInvoice(getID(formData, invoiceId));
-
 
 
     const handleReturnClick = () => {
         setIsReturnClicked(true);
 
         setTimeout(() => {
-            navigate('/');
+            navigate('..');
         }, 1000)
     };
+
+    const handleMarkPaid = () => {
+        selectedInvoice.status = 'Paid';
+        StoreEditInvoice(selectedInvoice.id, selectedInvoice);
+        // updateInvoiceData(selectedInvoice);
+        navigate('/');
+    }
 
 
 
@@ -36,8 +56,8 @@ const InvoiceDetails = ({formData, selectedInvoice, setSelectedInvoice}) => {
                 {selectedInvoice ? 
                         <>
                             <div className='DisplayContents-Invoice'>
-                                <DisplaySpecificInvoice item={selectedInvoice} handleReturnClick={handleReturnClick} />
-                                <DisplayFullContents item={selectedInvoice} />
+                                <DisplaySpecificInvoice item={selectedInvoice} handleReturnClick={handleReturnClick} handleDeleteButton={handleDeleteButton} shouldDisplayPaymentDue={shouldDisplayPaymentDue}/>
+                                <DisplayFullContents item={selectedInvoice} invoiceId={selectedInvoice.id} status={selectedInvoice.status}  />
                             </div>
                         </>
                     :
@@ -45,13 +65,14 @@ const InvoiceDetails = ({formData, selectedInvoice, setSelectedInvoice}) => {
                 }
 
             </div>
-            {selectedInvoice ? <SelectInvoiceFooter invoiceId={selectedInvoice.id} /> : <span>Loading...</span>}
+            {selectedInvoice ? <SelectInvoiceFooter invoiceId={selectedInvoice.id} handleMarkPaid={handleMarkPaid} status={selectedInvoice.status} handleDeleteButton={handleDeleteButton} shouldDisplayPaymentDue={shouldDisplayPaymentDue} /> : <span>Loading...</span>}
         </>
     )
 };
 
 
-const DisplaySpecificInvoice = ({item, handleReturnClick, handleDisplayFooter}) => {
+const DisplaySpecificInvoice = ({item, handleReturnClick, handleDeleteButton, invoiceId, status, shouldDisplayPaymentDue}) => {
+
     return (
         <>
             <div
@@ -67,6 +88,15 @@ const DisplaySpecificInvoice = ({item, handleReturnClick, handleDisplayFooter}) 
                     <div className='status-Circle' id={`status-circle-${item.status}`}></div>
                     <div className='status-text' id={`status-text-${item.status}`}>{item.status}</div>
                 </div>
+                {shouldDisplayPaymentDue && 
+                    <div className={`Invoice-Options-Wrapper Button-${status}-Wrapper`}>
+                        <Link to={`/invoice/edit/${invoiceId}`} id='edit-container'>
+                            <button id='edit'>
+                                    Edit
+                            </button>
+                        </Link>
+                        <button id='delete' onClick={handleDeleteButton}>Delete</button>
+                    </div>}
             </div>
         </>
     );
@@ -148,45 +178,70 @@ const DisplayItems = ({item}) => {
 
 
 
-const SelectInvoiceFooter = ({invoiceId}) => {
+const SelectInvoiceFooter = ({invoiceId, handleMarkPaid, status, handleDeleteButton, shouldDisplayPaymentDue}) => {
     return (
-        <div className='Invoice-Options-Wrapper'>
-            <Link to={`/invoice/edit/${invoiceId}`}>
-                <button id='edit'>
-                        Edit
-                </button>
-            </Link>
-            <button id='delete'>Delete</button>
-            <button id='paid'>Mark as Paid</button>
-        </div>
+        <>
+         {!shouldDisplayPaymentDue && 
+            <div className={`Invoice-Options-Wrapper Button-${status}-Wrapper`}>
+                 <Link to={`/invoice/edit/${invoiceId}`} id='edit-container'>
+                     <button id='edit'>
+                             Edit
+                     </button>
+                 </Link>
+                 <button id='delete' onClick={handleDeleteButton}>Delete</button>
+                 <button id='paid' onClick={handleMarkPaid}>Mark as Paid</button>
+             </div>
+         }
+        </>
+
     )    
 };
 
-export const EditInvoiceFooter = () => {
+
+export const EditInvoiceFooter = ({handleCancelSubmit, handleSaveSubmit}) => {
     return (
-        <div className='Invoice-Options-Wrapper edit-footer-wrapper'>
-            <button id='cancel'> Cancel </button>
-            <button id='save-changes'> Save Changes </button>
-        </div>
+        <form className='Invoice-Options-Wrapper edit-footer-wrapper'>
+            <button id='cancel' onClick={handleCancelSubmit}> Cancel </button>
+            <button id='save-changes' onClick={handleSaveSubmit}> Save Changes </button>
+        </form>
     )
 }
 
+
+
 export const NewInvoiceFooter = ({handleSubmit}) => {
     return (
-        <form className='Invoice-Options-Wrapper' onClick={handleSubmit}>
+        <div className='Invoice-Options-Wrapper'>
             <button id='discard'>
                 Discard
             </button>
             <button id='save-draft'>
                 Save as Draft
             </button>
-            <button type='submit' id='save-send'>
+            <button onClick={handleSubmit} id='save-send'>
                 Save & Send
             </button>
-        </form>
+        </div>
     )
 }
 
+
+export const ConfirmDeletion = ({invoice, handleDeleteButton, deleteForm}) => {
+    return (
+        <div className='Confirm-Deletion-Backdrop'>
+            <div className='Confirm-Deletion-Wrapper'>
+                <h2 className='Delete-Heading'>
+                    Confirm Deletion
+                </h2>
+                <p className='Header-subheading'>Are you sure you want to delete invoice {invoice}? This action cannot be undone.</p>
+                <div className='DeletePopUp-Options Invoice-Options-Wrapper'>
+                    <button id='cancel' onClick={handleDeleteButton}>Cancel</button>
+                    <button id='delete' onClick={deleteForm}>Delete</button>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 
 

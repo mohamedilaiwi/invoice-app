@@ -18,15 +18,14 @@
 
 .main-content-wrapper {
     padding: 2rem;
-    height: 100%;
-    background: var(--content-bg);
+    height: 100vh;
 }
 
 .Header-content-wrapper {
     display: flex;
     align-items: center;
     width: 100%;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
 
 .Header-text-wrapper {
@@ -208,16 +207,16 @@
     text-transform: capitalize;
 }
 
-#status-wrapper-pending {
+#status-wrapper-Pending {
     background: var(--pending-bg);
     color: var(--pending-color);
 }
 
-#status-circle-pending {
+#status-circle-Pending {
     background: var(--pending-color);
 }
 
-#status-text-pending {
+#status-text-Pending {
     color: var(--pending-color);
 }
 
@@ -275,3 +274,70 @@
     color: var(--invoice-text-color);
 }
 
+@media (min-width: 768px) {
+    .Header-content-wrapper .header-text {
+        font-size: 2rem;
+    }
+
+    .Header-content-wrapper .header-subheading {
+        font-size: 1.1rem;
+    }
+
+    .InvoiceItem {
+        grid-template-columns: 5rem 9rem 1fr min-content min-content min-content;
+        grid-template-rows: 1fr;
+        align-items: center;
+    }
+
+    .InvoiceItem .InvoiceItem-ID {
+        margin-bottom: initial;
+    }
+
+    .InvoiceItem .InvoiceItem-PaymentDue {
+        grid-area: 1 / 2 / 2 / 3;
+        margin-bottom: 0;
+    }
+
+    .InvoiceItem .InvoiceItem-ClientName {
+        grid-area: 1 / 3 / 2 / 4;
+        margin-right: 2.5rem;
+        text-align: initial;
+        width: max-content;
+    }
+
+    .InvoiceItem .InvoiceItem-Total {
+        grid-area: 1 / 4 / 2 / 5;
+        font-size: 1.3rem;
+    }
+
+    .InvoiceItem .InvoiceItem-Status-Wrapper {
+        grid-area: 1 / 5 / 2 / 6;
+        margin-left: 2.5rem;
+        margin-right: 1.25rem;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .main-content-wrapper {
+        padding: 4.5rem 3rem;
+        display: flex;
+        width: 100%;
+        flex: 1 1 0%;
+    }
+
+    .Style-Wrapper {
+        width: 100%;
+        max-width: 45rem;
+        height: 100%;
+        margin: 0px auto;
+    }
+
+    .main-content-wrapper .Header-content-wrapper {
+        padding: 0;
+    }
+
+    .main-content-wrapper .Invoice-Items-Wrapper {
+        padding: 0;
+    }
+
+}

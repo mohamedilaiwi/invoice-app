@@ -2,31 +2,71 @@ import './FormEditing.css'
 import backArrow from '../../images/assets/icon-arrow-down.svg';
 import deleteImg from '../../images/assets/icon-delete.svg';
 import { EditInvoiceFooter } from '../InvoiceDetails/InvoiceDetails';
+import { useEffect, useState } from 'react';
+import { StoreEditInvoice } from '../InvoiceDetails/NewInvoices';
+import { useNavigate } from 'react-router-dom';
+import { cleanForm } from '../../utilities/utils';
 
-const EditFormContainer = ({form}) => {
+const EditFormContainer = ({editedForm, selectedInvoice, handleInputChange, setEditedForm, updateInvoiceData, handleFormInputChange}) => {
+    const [isReturnClicked, setIsReturnClicked] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setEditedForm(selectedInvoice);
+    }, [])
+
+
+    const handleSaveSubmit = () => {
+        const completed = StoreEditInvoice(editedForm.id, editedForm);
+        if (completed) {
+            updateInvoiceData(editedForm);
+            navigate('/');
+        }
+    }
+
+    const handleCancelSubmit = () => {
+        setEditedForm(cleanForm());
+        navigate('/');
+    }
+
+    const handleReturnClick = () => {
+        setIsReturnClicked(true);
+        setEditedForm(cleanForm());
+
+        setTimeout(() => {
+            navigate(-1);
+        }, 1000)
+    };
+
+
     return (
-      <div className='Editting-Form-Wrapper'>
-        <EditForm form={form}/>
-        <EditInvoiceFooter />
-      </div>
+        <>
+            {editedForm ?         
+                <div className={`Editting-Form-Wrapper ${isReturnClicked ? 'return-page-shifted' : ''}`}>
+                    <EditForm form={editedForm} handleInputChange={handleInputChange} handleReturnClick={handleReturnClick} handleFormInputChange={handleFormInputChange}/>
+                    <EditInvoiceFooter handleSaveSubmit={handleSaveSubmit} handleCancelSubmit={handleCancelSubmit} />
+                </div> : 
+                'Loading..'}
+        </>
     );
 };
 
 
-export const EditForm = ({form}) => {
+export const EditForm = ({form, handleInputChange, handleReturnClick, handleFormInputChange}) => {
     return (
         <div className='Editting-Form-Wrapper'>
             <div
                 className={`return-page-wrapper`}
+                onClick={handleReturnClick}
             >
                 <img src={backArrow} alt=''/>
                 Go back
             </div>
             <div className='Editing-Form'>
                 <h2>Edit <span>#</span>{form.id}</h2>
-                <BillFrom editedForm={form} />
-                <BillTo editedForm={form} />
-                <ItemList form={form} />
+                <BillFrom editedForm={form} handleInputChange={handleInputChange}/>
+                <BillTo editedForm={form} handleInputChange={handleInputChange}/>
+                <ItemList form={form} handleFormInputChange={handleFormInputChange} />
             </div>
         </div>
     );
@@ -78,7 +118,7 @@ export const BillFrom = ({editedForm, handleInputChange}) => {
     );
 };
 
-export const BillTo = ({form, editedForm, setEditedForm, handleInputChange}) => {
+export const BillTo = ({editedForm, handleInputChange}) => {
 
 
     return (
@@ -174,7 +214,7 @@ export const BillTo = ({form, editedForm, setEditedForm, handleInputChange}) => 
     )
 };
 
-const ItemList = ({form}) => {
+const ItemList = ({form, handleFormInputChange}) => {
     return (
         <div className='ItemList-Wrapper'>
             <h3 id='item-list'>Item List</h3>
@@ -184,7 +224,7 @@ const ItemList = ({form}) => {
                     return (
                         <NewItem 
                             index={index}
-                            handleFormInputChange={null}
+                            handleFormInputChange={handleFormInputChange}
                             itemInputs={item} 
                         />
                     )

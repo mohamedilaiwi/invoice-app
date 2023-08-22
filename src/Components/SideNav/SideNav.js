@@ -6,17 +6,10 @@ import moon from "../../images/assets/icon-moon.svg";
 import sun from "../../images/assets/icon-sun.svg";
 import avatar from "../../images/assets/image-avatar.jpg";
 
-const SideNav = () => {
-  const [theme, setTheme] = useState({ isLight: true, isDark: false });
+const SideNav = ({theme, handleThemeChange}) => {
 
 
-  const handleThemeChange = () => {
-    setTheme({
-      isLight: !theme.isLight,
-      isDark: !theme.isDark,
-    });
-  };
-
+  
   return (
     <div className="side-nav">
       <div className='side-nav_logo-wrapper'>
