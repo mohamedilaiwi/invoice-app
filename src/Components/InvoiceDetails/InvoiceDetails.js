@@ -7,7 +7,7 @@ import backArrow from '../../images/assets/icon-arrow-left.svg';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getID } from '../../utilities/utils';
-import { StoreEditInvoice } from '../InvoiceDetails/NewInvoices';
+import { StoreEditInvoice } from './NewInvoices.mjs';
 
 
 const InvoiceDetails = ({formData, selectedInvoice, setSelectedInvoice, handleDeleteButton}) => {
@@ -65,7 +65,7 @@ const InvoiceDetails = ({formData, selectedInvoice, setSelectedInvoice, handleDe
                 }
 
             </div>
-            {selectedInvoice ? <SelectInvoiceFooter invoiceId={selectedInvoice.id} handleMarkPaid={handleMarkPaid} status={selectedInvoice.status} handleDeleteButton={handleDeleteButton} shouldDisplayPaymentDue={shouldDisplayPaymentDue} /> : <span>Loading...</span>}
+            {selectedInvoice ? <SelectInvoiceFooter invoiceId={selectedInvoice.id} handleMarkPaid={handleMarkPaid} status={selectedInvoice.status} handleDeleteButton={handleDeleteButton} /> : <span>Loading...</span>}
         </>
     )
 };
@@ -181,7 +181,7 @@ const DisplayItems = ({item}) => {
 const SelectInvoiceFooter = ({invoiceId, handleMarkPaid, status, handleDeleteButton, shouldDisplayPaymentDue}) => {
     return (
         <>
-         {!shouldDisplayPaymentDue && 
+         {shouldDisplayPaymentDue && 
             <div className={`Invoice-Options-Wrapper Button-${status}-Wrapper`}>
                  <Link to={`/invoice/edit/${invoiceId}`} id='edit-container'>
                      <button id='edit'>
